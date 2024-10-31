@@ -1,52 +1,43 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import networkx as nx
 import matplotlib.pyplot as plt
 
 def create_network_graph():
     try:
-        num_nodes = int(num_nodes_entry.get())
-    except ValueError:
-        messagebox.showerror("Ошибка", "Пожалуйста, введите целое число для количества узлов.")
-        return
+        edges_input = edges_entry.get().strip()
+        if not edges_input:
+            messagebox.showerror("Ошибка", "Пожалуйста, введите соединения между узлами.")
+            return
+        
+        edges = [tuple(map(int, edge.split(','))) for edge in edges_input.split(';')]
+        
+        if not all(isinstance(edge, tuple) and len(edge) == 2 for edge in edges):
+            messagebox.showerror("Ошибка", "Формат соединений должен быть: узел1,узел2; узел3,узел4; ...")
+            return
+        
+        G = nx.Graph()  # Создание графа
+        G.add_edges_from(edges)  # Добавление соединений в граф
+        
+        title = f'Граф с {G.number_of_nodes()} узлами и {G.number_of_edges()} соединениями'
 
-    if num_nodes <= 0:
-        messagebox.showerror("Ошибка", "Количество узлов должно быть положительным числом.")
-        return
+        plt.figure(figsize=(8, 6))
+        nx.draw(G, with_labels=True, node_color='lightblue', edge_color='gray', node_size=300, font_size=10)
+        plt.title(title)
+        plt.show()
 
-    if network_type_var.get() == 1:
-        # Создание социальной сети
-        G = nx.erdos_renyi_graph(num_nodes, 0.3)
-        title = f'Социальная сеть с {num_nodes} узлами'
-    elif network_type_var.get() == 2:
-        # Создание компьютерной сети
-        G = nx.barabasi_albert_graph(num_nodes, 2)
-        title = f'Компьютерная сеть с {num_nodes} узлами'
-    else:
-        messagebox.showerror("Ошибка", "Пожалуйста, выберите тип сети.")
-        return
-
-    plt.figure(figsize=(8, 6))
-    nx.draw(G, with_labels=True, node_color='lightblue', edge_color='gray', node_size=300, font_size=10)
-    plt.title(title)
-    plt.ion()  # Включение интерактивного режима
-    plt.show()
+    except Exception as e:
+        messagebox.showerror("Ошибка", f"Произошла ошибка: {e}")
 
 root = tk.Tk()
 root.title("Построение сетевого графа")
 
-tk.Label(root, text="Количество узлов:").grid(row=0, column=0)
-num_nodes_entry = tk.Entry(root)
-num_nodes_entry.grid(row=0, column=1)
-num_nodes_entry.insert(0, "5")  # Предзаполненное значение
-
-network_type_var = tk.IntVar()
-
-tk.Label(root, text="Выберите тип сети:").grid(row=1, column=0)
-tk.Radiobutton(root, text="Социальная сеть", variable=network_type_var, value=1).grid(row=1, column=1)
-tk.Radiobutton(root, text="Компьютерная сеть", variable=network_type_var, value=2).grid(row=2, column=1)
+tk.Label(root, text="Введите соединения (формат: узел1,узел2; узел3,узел4):").grid(row=0, column=0, columnspan=2)
+edges_entry = tk.Entry(root, width=50)
+edges_entry.grid(row=1, column=0, columnspan=2)
+edges_entry.insert(0, "1,2; 1,3; 2,3; 3,4")  # Предзаполненное значение
 
 create_button = tk.Button(root, text="Построить граф", command=create_network_graph)
-create_button.grid(row=3, columnspan=2)
+create_button.grid(row=2, columnspan=2)
 
 root.mainloop()
