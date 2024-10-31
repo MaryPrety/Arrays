@@ -78,3 +78,6 @@
 3. Задайте количество точек и параметры `a` и `b`, если это требуется для выбранной спирали.
 4. Нажмите "Построить спираль" для отображения графика.
 
+![{F9C37408-B927-4718-8C57-5DA1D497F6C8}](https://github.com/user-attachments/assets/33a323e1-8c55-4454-a59a-91ca42eaaba3)
+![{0D9942FB-F904-42D0-8238-D8792C077CF1}](https://github.com/user-attachments/assets/cb3839a8-7269-4b0d-853f-f1f074766099)
+![{92E3F5EE-3784-4C93-9D1D-C47924375843}](https://github.com/user-attachments/assets/de1ea03c-5797-4acc-bb71-3863e654537e)
